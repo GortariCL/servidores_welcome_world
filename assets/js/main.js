@@ -74,19 +74,19 @@ http.createServer((req, res) => {
     }
     //Requerimiento 5
     if(req.url.includes('/eliminar')){
-        fs.existsSync(`${archivo}`)?(
-            res.write(`Tu solicitud para eliminar el archivo ${archivo} se esta procesando
-            `),
+        fs.existsSync(`${archivo}`)?(            
             fs.unlink(`${archivo}`, (err, data) =>{
+                res.write(`Tu solicitud para eliminar el archivo ${archivo} se esta procesando <br>`),
                 //Requerimiento 9
                 setTimeout(function(){
                     //Requerimiento 6
-                    res.write(` - (${fechaCompleta()}) - El archivo ${archivo} ha sido eliminado con exito!`);
-                    res.end();
-                })
-            },3000))
-                //Requerimiento 6
-            :(res.write(`El archivo indicado no existe!`));      
+                    res.write(`(${fechaCompleta()}) - El archivo ${archivo} ha sido eliminado con exito!`);
+                    return res.end();
+                },3000)
+            }))
+            //Requerimiento 6
+            :(res.write(`El archivo indicado no existe!`),
+            res.end());      
     }
 }).listen
 (8080, () => console.log('Escuchando el puerto 8080'));
