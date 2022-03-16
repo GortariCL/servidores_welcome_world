@@ -95,20 +95,7 @@ http.createServer((req, res) => {
             },3000))
                 //6. Devolver un mensaje declarando el éxito o fracaso de lo solicitado en cada consulta
                 //recibida.
-            :(res.write(`El archivo indicado no existe!`));
-
-        /* if(fs.existsSync(`${archivo}`)){
-            fs.unlink(`${archivo}`, (err, data) => {
-                //6. Devolver un mensaje declarando el éxito o fracaso de lo solicitado en cada consulta
-                //recibida.
-                res.write(`(${fechaCompleta()}) - Archivo ${archivo} eliminado con éxito`);
-                res.end();
-            })
-        }else{
-                
-                res.write(`El archivo indicado no existe!`);
-                res.end();
-        }  */       
+            :(res.write(`El archivo indicado no existe!`));      
     }
 
 }).listen
