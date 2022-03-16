@@ -22,7 +22,6 @@ const fechaCompleta = () => {
         return `${dia}/${mes + 1}/${anio}`;
     }
 }
-
 //Requerimiento 1
 //Creacion servidor con modulo http
 http.createServer((req, res) => {
@@ -89,6 +88,5 @@ http.createServer((req, res) => {
                 //Requerimiento 6
             :(res.write(`El archivo indicado no existe!`));      
     }
-
 }).listen
 (8080, () => console.log('Escuchando el puerto 8080'));
