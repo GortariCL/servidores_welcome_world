@@ -1,15 +1,16 @@
+//Importacion de modulos
 const http = require('http');
 const url = require('url');
 const fs = require('fs');
 
+//Declaracion de variables
 let archivo = '';
 let contenido = '';
 const dia = new Date().getDate();
 const mes = new Date().getMonth();
 const anio = new Date().getFullYear();
-//7. Agrega la fecha actual al comienzo del contenido de cada archivo creado en formato
-//“dd/mm/yyyy”. Considera que si el día o el mes es menor a 10 concatenar un “0” a la
-//izquierda. 
+//Requerimiento 7
+//Generador de fecha
 const fechaCompleta = () => {
     if(dia < 10 && mes < 10){
         return `0${dia}/0${mes + 1}/${anio}`;
@@ -22,27 +23,30 @@ const fechaCompleta = () => {
     }
 }
 
-//1. Crear un servidor en Node con el módulo http
+//Requerimiento 1
+//Creacion servidor con modulo http
 http.createServer((req, res) => {
-    res.writeHead(200, { 'Content-Type': 'text/html' }); // agregar nueva informacion al html (reescribiendo info)
-
+    res.writeHead(200, { 'Content-Type': 'text/html' }); // agregar nueva informacion al html (reescribir info)
+    //Almacenar los parametros recibidos
     const params = url.parse(req.url, true).query;
     archivo = params.archivo;
     contenido = params.contenido;
     nuevoArchivo = params.nuevoArchivo;
-
-    //2. Disponibilizar una ruta para crear un archivo a partir de los parámetros de la consulta
-    //recibida.
+    //Requerimiento 2    
     if(req.url.includes('/crear')){
-        fs.writeFile(archivo, contenido, () => {
-            //6. Devolver un mensaje declarando el éxito o fracaso de lo solicitado en cada consulta
-            //recibida.
-            res.write(`(${fechaCompleta()}) - Archivo creado con exito!`);
+        if(archivo == '' || contenido == ''){
+            //Requerimiento 6
+            res.write('No se creo el archivo! Debe ingresar información');
             res.end();
-        })        
+        }else{
+            fs.writeFile(archivo, contenido, () => {
+                //Requerimiento 6
+                res.write(`(${fechaCompleta()}) - Archivo creado con exito!`);
+                res.end();
+            })     
+        }
     }
-    //3. Disponibilizar una ruta para devolver el contenido de un archivo cuyo nombre es
-    //declarado en los parámetros de la consulta recibida.
+    //Requerimiento 3
     if(req.url.includes('/leer')){
         if(fs.existsSync(`./${archivo}`)){
             fs.readFile(archivo, (err, data) => {
@@ -50,51 +54,39 @@ http.createServer((req, res) => {
                 res.end();
             });
         }else{
-                //6. Devolver un mensaje declarando el éxito o fracaso de lo solicitado en cada consulta
-                //recibida.
+                //Requerimiento 6
                 res.write('El archivo indicado no existe!');
                 res.end();
         }     
     }
-    //4. Disponibilizar una ruta para renombrar un archivo, cuyo nombre y nuevo nombre es
-    //declarado en los parámetros de la consulta recibida.
+    //Requerimiento 4
     if(req.url.includes('/renombrar')){
         if(fs.existsSync(`./${archivo}`)){
             fs.rename(`${archivo}`, `${nuevoArchivo}`, (err, data) => {
-                //6. Devolver un mensaje declarando el éxito o fracaso de lo solicitado en cada consulta
-                //recibida.
-                //8. En la ruta para renombrar, devuelve un mensaje de éxito incluyendo el nombre
-                //anterior del archivo y su nuevo nombre de forma dinámica.
+                //Requerimiento 6 || Requerimiento 8
                 res.write(`(${fechaCompleta()}) - El Archivo ${archivo} ha sido renombrado por ${nuevoArchivo}`);
                 res.end();
             })
         }else{
-                //6. Devolver un mensaje declarando el éxito o fracaso de lo solicitado en cada consulta
-                //recibida.
+                //Requerimiento 6
                 res.write(`El archivo indicado no existe!`);
                 res.end();
         }
     }
-    //5. Disponibilizar una ruta para eliminar un archivo, cuyo nombre es declarado en los
-    //parámetros de la consulta recibida.
+    //Requerimiento 5
     if(req.url.includes('/eliminar')){
         fs.existsSync(`${archivo}`)?(
             res.write(`Tu solicitud para eliminar el archivo ${archivo} se esta procesando
             `),
             fs.unlink(`${archivo}`, (err, data) =>{
-                //9. En el mensaje de respuesta de la ruta para eliminar un archivo, devuelve el siguiente
-                //mensaje: “Tu solicitud para eliminar el archivo <nombre_archivo> se está
-                //procesando”, y luego de 3 segundos envía el mensaje de éxito mencionando el
-                //nombre del archivo eliminado.
+                //Requerimiento 9
                 setTimeout(function(){
-                    //6. Devolver un mensaje declarando el éxito o fracaso de lo solicitado en cada consulta
-                    //recibida.
+                    //Requerimiento 6
                     res.write(` - (${fechaCompleta()}) - El archivo ${archivo} ha sido eliminado con exito!`);
                     res.end();
                 })
             },3000))
-                //6. Devolver un mensaje declarando el éxito o fracaso de lo solicitado en cada consulta
-                //recibida.
+                //Requerimiento 6
             :(res.write(`El archivo indicado no existe!`));      
     }
 
