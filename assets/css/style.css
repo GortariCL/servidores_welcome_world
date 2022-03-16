@@ -1,0 +1,13 @@
+body{
+    border: 0px;
+    margin: 0px;
+    padding: 0px;
+    background-color: #151D3B;
+    color: #ffffff;
+    font-family: 'Smooch Sans', sans-serif;
+}
+
+button{
+    font-family: 'Open Sans', sans-serif;
+    font-size: .9rem !important;
+}
